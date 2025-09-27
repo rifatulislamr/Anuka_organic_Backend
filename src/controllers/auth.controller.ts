@@ -133,6 +133,57 @@ export const register = async (
 };
 
 
+// export const updateUserController = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ): Promise<void> => {
+//   try {
+//     const { userId } = req.params;
+//     const { username, voucherTypes, roleId, active } = req.body;
+
+//     const updateData: {
+//       username?: string;
+//       voucherTypes?: string[];
+//       roleId?: number;
+//       active?: boolean;
+//     } = {};
+
+//     if (username !== undefined) updateData.username = username;
+//     if (voucherTypes !== undefined) updateData.voucherTypes = voucherTypes;
+//     if (roleId !== undefined) updateData.roleId = Number(roleId);
+//     // Change this line
+//     if (active !== undefined) updateData.active = Boolean(active); // Allow setting to false
+
+//     const updatedUser = await updateUser(Number(userId), updateData);
+
+//     if (!updatedUser) {
+//       res.status(404).json({
+//         status: "fail",
+//         message: "User not found",
+//       });
+//       return;
+//     }
+
+//     res.status(200).json({
+//       status: "success",
+//       data: {
+//         user: {
+//           id: updatedUser.userId,
+//           username: updatedUser.username,
+//           roleId: updatedUser.roleId,
+//           active: updatedUser.active,
+//         },
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+// ========== Controller Layer ==========
+
+
 export const updateUserController = async (
   req: Request,
   res: Response,
@@ -140,20 +191,42 @@ export const updateUserController = async (
 ): Promise<void> => {
   try {
     const { userId } = req.params;
-    const { username, voucherTypes, roleId, active } = req.body;
+    const {
+      username,
+      email,
+      roleId,
+      active,
+      fullName,
+      phone,
+      street,
+      city,
+      state,
+      country,
+    } = req.body;
 
     const updateData: {
       username?: string;
-      voucherTypes?: string[];
+      email?: string;
       roleId?: number;
       active?: boolean;
+      fullName?: string;
+      phone?: string;
+      street?: string;
+      city?: string;
+      state?: string;
+      country?: string;
     } = {};
 
     if (username !== undefined) updateData.username = username;
-    if (voucherTypes !== undefined) updateData.voucherTypes = voucherTypes;
+    if (email !== undefined) updateData.email = email;
     if (roleId !== undefined) updateData.roleId = Number(roleId);
-    // Change this line
-    if (active !== undefined) updateData.active = Boolean(active); // Allow setting to false
+    if (active !== undefined) updateData.active = Boolean(active);
+    if (fullName !== undefined) updateData.fullName = fullName;
+    if (phone !== undefined) updateData.phone = phone;
+    if (street !== undefined) updateData.street = street;
+    if (city !== undefined) updateData.city = city;
+    if (state !== undefined) updateData.state = state;
+    if (country !== undefined) updateData.country = country;
 
     const updatedUser = await updateUser(Number(userId), updateData);
 
@@ -168,18 +241,15 @@ export const updateUserController = async (
     res.status(200).json({
       status: "success",
       data: {
-        user: {
-          id: updatedUser.userId,
-          username: updatedUser.username,
-          roleId: updatedUser.roleId,
-          active: updatedUser.active,
-        },
+        user: updatedUser,
       },
     });
   } catch (error) {
     next(error);
   }
 };
+
+
 
 export const changePasswordController = async (
   req: Request,

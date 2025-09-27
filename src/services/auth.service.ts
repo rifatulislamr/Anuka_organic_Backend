@@ -104,28 +104,72 @@ export const getUsers = async () => {
 
 //this is update user api
 
+// export const updateUser = async (
+//   userId: number,
+//   updateData: {
+//     username?: string;
+//     voucherTypes?: string[];
+//     roleId?: number;
+//     active?: boolean;
+//   },
+// ) => {
+//   // Perform the update
+//   await db
+//     .update(userModel)
+//     .set(updateData)
+//     .where(sql`${userModel.userId} = ${userId}`);
+
+//   // Fetch the updated user
+//   const updatedUser = await db
+//     .select({
+//       userId: userModel.userId,
+//       username: userModel.username,
+//       roleId: userModel.roleId,
+//       active: userModel.active,
+//     })
+//     .from(userModel)
+//     .where(sql`${userModel.userId} = ${userId}`)
+//     .limit(1);
+
+//   return updatedUser[0];
+// };
+
+
+// ========== Service Layer ==========
 export const updateUser = async (
   userId: number,
   updateData: {
     username?: string;
-    voucherTypes?: string[];
+    email?: string;
     roleId?: number;
     active?: boolean;
+    fullName?: string;
+    phone?: string;
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    // ⚠️ no password here
   },
 ) => {
-  // Perform the update
   await db
     .update(userModel)
     .set(updateData)
     .where(sql`${userModel.userId} = ${userId}`);
 
-  // Fetch the updated user
   const updatedUser = await db
     .select({
       userId: userModel.userId,
       username: userModel.username,
+      email: userModel.email,
       roleId: userModel.roleId,
       active: userModel.active,
+      fullName: userModel.fullName,
+      phone: userModel.phone,
+      street: userModel.street,
+      city: userModel.city,
+      state: userModel.state,
+      country: userModel.country,
     })
     .from(userModel)
     .where(sql`${userModel.userId} = ${userId}`)
@@ -133,6 +177,7 @@ export const updateUser = async (
 
   return updatedUser[0];
 };
+
 
 export const loginUser = async (username: string, password: string) => {
   const user = await findUserByUsername(username);
