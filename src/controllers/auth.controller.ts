@@ -133,53 +133,6 @@ export const register = async (
 };
 
 
-// export const updateUserController = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ): Promise<void> => {
-//   try {
-//     const { userId } = req.params;
-//     const { username, voucherTypes, roleId, active } = req.body;
-
-//     const updateData: {
-//       username?: string;
-//       voucherTypes?: string[];
-//       roleId?: number;
-//       active?: boolean;
-//     } = {};
-
-//     if (username !== undefined) updateData.username = username;
-//     if (voucherTypes !== undefined) updateData.voucherTypes = voucherTypes;
-//     if (roleId !== undefined) updateData.roleId = Number(roleId);
-//     // Change this line
-//     if (active !== undefined) updateData.active = Boolean(active); // Allow setting to false
-
-//     const updatedUser = await updateUser(Number(userId), updateData);
-
-//     if (!updatedUser) {
-//       res.status(404).json({
-//         status: "fail",
-//         message: "User not found",
-//       });
-//       return;
-//     }
-
-//     res.status(200).json({
-//       status: "success",
-//       data: {
-//         user: {
-//           id: updatedUser.userId,
-//           username: updatedUser.username,
-//           roleId: updatedUser.roleId,
-//           active: updatedUser.active,
-//         },
-//       },
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 // ========== Controller Layer ==========
 

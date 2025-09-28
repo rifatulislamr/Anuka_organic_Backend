@@ -102,37 +102,7 @@ export const getUsers = async () => {
   return userList;
 };
 
-//this is update user api
 
-// export const updateUser = async (
-//   userId: number,
-//   updateData: {
-//     username?: string;
-//     voucherTypes?: string[];
-//     roleId?: number;
-//     active?: boolean;
-//   },
-// ) => {
-//   // Perform the update
-//   await db
-//     .update(userModel)
-//     .set(updateData)
-//     .where(sql`${userModel.userId} = ${userId}`);
-
-//   // Fetch the updated user
-//   const updatedUser = await db
-//     .select({
-//       userId: userModel.userId,
-//       username: userModel.username,
-//       roleId: userModel.roleId,
-//       active: userModel.active,
-//     })
-//     .from(userModel)
-//     .where(sql`${userModel.userId} = ${userId}`)
-//     .limit(1);
-
-//   return updatedUser[0];
-// };
 
 
 // ========== Service Layer ==========
