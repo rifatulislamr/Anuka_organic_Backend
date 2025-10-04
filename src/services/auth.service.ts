@@ -8,7 +8,7 @@ import {
   hashPassword,
   validatePassword,
 } from "./utils/password.utils";
-import { NewUser, userModel } from "../schemas";
+import { NewUser, userModel, roleModel } from "../schemas";
 
 export const findUserByUsername = async (username: string) => {
   const [user] = await db
@@ -97,11 +97,28 @@ export const createUser = async (userData: NewUser) => {
 //get user api
 
 export const getUsers = async () => {
-  const userList = await db.select().from(userModel);
+  const userList = await db
+    .select({
+      userId: userModel.userId,
+      username: userModel.username,
+      email: userModel.email,
+      active: userModel.active,
+      roleId: userModel.roleId,
+      fullName: userModel.fullName,
+      phone: userModel.phone,
+      street: userModel.street,
+      city: userModel.city,
+      state: userModel.state,
+      country: userModel.country,
+      createdAt: userModel.createdAt,
+      updatedAt: userModel.updatedAt,
+      roleName: roleModel.roleName,
+    })
+    .from(userModel)
+    .leftJoin(roleModel, eq(userModel.roleId, roleModel.roleId));
 
   return userList;
-};
-
+}
 
 
 

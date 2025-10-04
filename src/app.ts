@@ -4,6 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import { errorHandler } from "./middlewares/error.middleware";
 import routes from "./routes";
+import path from "path";
 
 dotenv.config();
 
@@ -19,6 +20,10 @@ app.use(
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
+// Serve uploaded files
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Routes
 app.use("/api", routes);

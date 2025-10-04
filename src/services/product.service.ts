@@ -2,9 +2,15 @@ import { eq, and } from "drizzle-orm";
 import { NewProduct, products } from "../schemas";
 import { db } from "../config/database";
 
+
 export const createProduct = async (data: NewProduct) => {
   const [newProduct] = await db.insert(products).values(data).$returningId();
-  return { id: newProduct, ...data };
+
+  // Return full product data
+  return {
+    id: newProduct,
+    ...data,
+  };
 };
 
 export const getProducts = async (filters?: { categoryId?: number; isActive?: boolean }) => {
