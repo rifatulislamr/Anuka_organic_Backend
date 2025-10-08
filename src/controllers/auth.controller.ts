@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 
-import jwt from "jsonwebtoken";
+
 import { db } from "../config/database";
 import { roleModel, userModel } from "../schemas";
 import { eq } from "drizzle-orm";
 import {
   changePassword,
   createUser,
+  getUserById,
   getUsers,
   loginUser,
   updateUser,
@@ -22,24 +23,7 @@ const loginSchema = z.object({
     .min(8, "Password must be at least 8 characters"),
 });
 
-// const registerSchema = z
-//   .object({
-//     username: z.string().min(1, "Username is required"),
-//     password: z
-//       .string()
-//       .min(1, "Password is required")
-//       .min(8, "Password must be at least 8 characters"),
-//     confirmPassword: z.string(),
-//     active: z.boolean().default(true),
-//     roleId: z.number(),
-    
-//   })
-//   .refine((data) => data.password === data.confirmPassword, {
-//     message: "Passwords don't match",
-//     path: ["confirmPassword"],
-//   });
 
-// anuka website register validation zod schema
 const registerSchema = z
   .object({
     username: z.string().min(1, "Username is required"),
@@ -63,10 +47,6 @@ const registerSchema = z
 
 
 
-const createUserCompanySchema = z.object({
-  userId: z.number().int().positive(),
-  companyId: z.number().int().positive(),
-});
 
 const changePasswordSchema = z
   .object({
@@ -226,20 +206,7 @@ export const changePasswordController = async (
   }
 };
 
-//this is get user_id and role_id by inner join
 
-// export const getUsersWithRoles = async () => {
-//   return await db
-//     .select({
-//       userId: userModel.userId,
-//       username: userModel.username,
-//       active: userModel.active,
-//       roleName: roleModel.roleName,
-//       voucherTypes: userModel.voucherTypes,
-//     })
-//     .from(userModel)
-//     .innerJoin(roleModel, eq(userModel.roleId, roleModel.roleId));
-// };
 
 export const getUsersWithRoles = async (
   req: Request,
@@ -273,3 +240,29 @@ export const getUsersWithRoles = async (
   }
 };
 
+// get user by userId
+export const getUserByIdController = async (
+  req: Request<{ userId: string }>, // typing req.params
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      res.status(400).json({ message: "userId is required" });
+      return;
+    }
+
+    const user = await getUserById(Number(userId));
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    next(error); // Pass errors to Express error handler
+  }
+};

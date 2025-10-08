@@ -238,3 +238,29 @@ export const changePassword = async (
 };
 
 
+// get user by userId
+export const getUserById = async (userId: number) => {
+  const user = await db
+    .select({
+      userId: userModel.userId,
+      username: userModel.username,
+      email: userModel.email,
+      active: userModel.active,
+      roleId: userModel.roleId,
+      fullName: userModel.fullName,
+      phone: userModel.phone,
+      street: userModel.street,
+      city: userModel.city,
+      state: userModel.state,
+      country: userModel.country,
+      createdAt: userModel.createdAt,
+      updatedAt: userModel.updatedAt,
+      roleName: roleModel.roleName,
+    })
+    .from(userModel)
+    .leftJoin(roleModel, eq(userModel.roleId, roleModel.roleId))
+    .where(eq(userModel.userId, userId))
+    .limit(1); // only one user
+
+  return user[0] || null;
+};

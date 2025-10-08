@@ -45,6 +45,14 @@ export const createOrder = async (
   return { message: "Order created successfully", totalOrderAmount };
 };
 
+// get all orders - admin
+export const getAllOrders = async () => {
+  return await db.select().from(orders);
+}
+
+
+// get orders by user
+
 export const getOrdersByUser = async (userId: number) => {
   return await db
     .select()

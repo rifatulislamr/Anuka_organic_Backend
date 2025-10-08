@@ -22,6 +22,22 @@ export const createOrderController = async (
   }
 };
 
+// get all orders - admin
+
+export const getAllOrdersController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await orderService.getAllOrders();
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// get orders by user
 export const getOrdersByUserController = async (
   req: Request,
   res: Response,
