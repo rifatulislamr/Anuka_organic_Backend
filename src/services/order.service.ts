@@ -1,5 +1,5 @@
 import { db } from "../config/database";
-import { orders, products } from "../schemas";
+import { orders, products, userModel } from "../schemas";
 import { eq } from "drizzle-orm";
 
 export const createOrder = async (
@@ -46,8 +46,23 @@ export const createOrder = async (
 };
 
 // get all orders - admin
+// export const getAllOrders = async () => {
+//   return await db.select().from(orders);
+// }
 export const getAllOrders = async () => {
-  return await db.select().from(orders);
+  return await db
+    .select({
+      id: orders.id,
+      userId: orders.userId,
+      productId:orders.productId,
+      productQuantity: orders.productQuantity,
+      totalAmount: orders.totalAmount,
+      status: orders.status,
+      createdAt: orders.createdAt,
+      userName: userModel.username, // or userModel.username
+    })
+    .from(orders)
+    .leftJoin(userModel, eq(orders.userId, userModel.userId))
 }
 
 
