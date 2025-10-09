@@ -98,6 +98,17 @@ export const productReviews = mysqlTable("product_reviews", {
 });
 
 // ================= CART =================
+// export const carts = mysqlTable("carts", {
+//   id: int("id").primaryKey().autoincrement(),
+//   productId: int("product_id")
+//     .notNull()
+//     .references(() => products.id, { onDelete: "cascade" }),
+//   userId: int("user_id")
+//     .notNull()
+//     .references(() => userModel.userId, { onDelete: "cascade" }),
+//   createdAt: timestamp("created_at").defaultNow(),
+// });
+
 export const carts = mysqlTable("carts", {
   id: int("id").primaryKey().autoincrement(),
   productId: int("product_id")
@@ -106,6 +117,7 @@ export const carts = mysqlTable("carts", {
   userId: int("user_id")
     .notNull()
     .references(() => userModel.userId, { onDelete: "cascade" }),
+  quantity: int("quantity").notNull().default(1), // ✅ added quantity
   createdAt: timestamp("created_at").defaultNow(),
 });
 
