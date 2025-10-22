@@ -15,7 +15,7 @@ const app = (0, express_1.default)();
 // Middleware
 app.use((0, cors_1.default)({
     // origin: "http://localhost:3000", // frontend origin
-    origin: "https://anukabd.com/", // frontend origin
+    origin: "https://anuka-organic.vercel.app", // frontend origin
     credentials: true, // allow cookies/auth headers
 }));
 app.use((0, helmet_1.default)());
