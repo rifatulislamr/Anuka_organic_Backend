@@ -22,17 +22,18 @@ const loginSchema = zod_1.z.object({
         .min(1, "Password is required")
         .min(8, "Password must be at least 8 characters"),
 });
+
 const registerSchema = zod_1.z
     .object({
     username: zod_1.z.string().min(1, "Username is required"),
-    email: zod_1.z
-        .string()
-        .min(1, "Email is required")
-        .email("Invalid email address"),
-    password: zod_1.z
-        .string()
-        .min(1, "Password is required")
-        .min(8, "Password must be at least 8 characters"),
+    fullName: zod_1.z.string().min(1, "Full name is required"),
+    phone: zod_1.z.string().min(1, "Phone number is required"),
+    street: zod_1.z.string().min(1, "Street is required"),
+    city: zod_1.z.string().min(1, "City is required"),
+    state: zod_1.z.string().min(1, "State is required"),
+    country: zod_1.z.string().min(1, "Country is required"),
+    email: zod_1.z.string().min(1, "Email is required").email("Invalid email address"),
+    password: zod_1.z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: zod_1.z.string(),
     active: zod_1.z.boolean().default(true),
     roleId: zod_1.z.number(),
@@ -69,15 +70,34 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.login = login;
-const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+//
+const register = async (req, res, next) => {
     try {
-        const { username, email, password, active, roleId } = registerSchema.parse(req.body);
-        const user = yield (0, auth_service_1.createUser)({ username, email, password, active, roleId });
+        const { username, fullName, phone, street, city, state, country, email, password, active, roleId, } = registerSchema.parse(req.body);
+        const user = await (0, auth_service_1.createUser)({
+            username,
+            fullName,
+            phone,
+            street,
+            city,
+            state,
+            country,
+            email,
+            password,
+            active,
+            roleId,
+        });
         res.status(201).json({
             status: "success",
             data: {
                 user: {
                     username: user.username,
+                    fullName: user.fullName,
+                    phone: user.phone,
+                    street: user.street,
+                    city: user.city,
+                    state: user.state,
+                    country: user.country,
                     email: user.email,
                     roleId: user.roleId,
                     active: user.active,
@@ -88,7 +108,7 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     catch (error) {
         next(error);
     }
-});
+};
 exports.register = register;
 // ========== Controller Layer ==========
 const updateUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

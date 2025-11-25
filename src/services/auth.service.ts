@@ -26,6 +26,13 @@ export const findUserByEmail = async (email: string) => {
   return user;
 };
 
+export const findUserByPhone = async (phone: string) => {
+  return await db.query.userModel.findFirst({
+    where: (users, { eq }) => eq(users.phone, phone),
+  });
+};
+
+
 
 export const getUserDetailsByUserId = async (userId: number) => {
   console.log(userId);
@@ -48,7 +55,7 @@ export const getUserDetailsByUserId = async (userId: number) => {
   return user;
 };
 
-// Create user function
+
 
 export const createUser = async (userData: NewUser) => {
   try {
@@ -64,7 +71,13 @@ export const createUser = async (userData: NewUser) => {
       throw BadRequestError("Email already registered, please try another");
     }
 
-    // Validate and hash password
+    // Check if phone already exists
+    const existingPhone = await findUserByPhone(userData.phone);
+    if (existingPhone) {
+      throw BadRequestError("Phone number already registered, please try another");
+    }
+
+    // Hash password
     validatePassword(userData.password);
     const hashedPassword = await hashPassword(userData.password);
 
@@ -73,6 +86,12 @@ export const createUser = async (userData: NewUser) => {
       .insert(userModel)
       .values({
         username: userData.username,
+        fullName: userData.fullName,
+        phone: userData.phone,
+        street: userData.street,
+        city: userData.city,
+        state: userData.state,
+        country: userData.country,
         email: userData.email,
         password: hashedPassword,
         active: userData.active,
@@ -80,10 +99,15 @@ export const createUser = async (userData: NewUser) => {
       })
       .$returningId();
 
-    // Return safe user object (no password exposed)
     return {
       id: newUserId,
       username: userData.username,
+      fullName: userData.fullName,
+      phone: userData.phone,
+      street: userData.street,
+      city: userData.city,
+      state: userData.state,
+      country: userData.country,
       email: userData.email,
       active: userData.active,
       roleId: userData.roleId,
@@ -92,6 +116,7 @@ export const createUser = async (userData: NewUser) => {
     throw error;
   }
 };
+
 
 
 //get user api

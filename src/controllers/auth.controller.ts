@@ -24,17 +24,21 @@ const loginSchema = z.object({
 });
 
 
+
+
 const registerSchema = z
   .object({
     username: z.string().min(1, "Username is required"),
-    email: z
-      .string()
-      .min(1, "Email is required")
-      .email("Invalid email address"),
-    password: z
-      .string()
-      .min(1, "Password is required")
-      .min(8, "Password must be at least 8 characters"),
+    fullName: z.string().min(1, "Full name is required"),
+    phone: z.string().min(1, "Phone number is required"),
+
+    street: z.string().min(1, "Street is required"),
+    city: z.string().min(1, "City is required"),
+    state: z.string().min(1, "State is required"),
+    country: z.string().min(1, "Country is required"),
+
+    email: z.string().min(1, "Email is required").email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
     active: z.boolean().default(true),
     roleId: z.number(),
@@ -43,6 +47,7 @@ const registerSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
 
 
 
@@ -83,24 +88,53 @@ export const login = async (
   }
 };
 
+
+
 export const register = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { username, email, password, active, roleId } =
-      registerSchema.parse(req.body);
+    const {
+      username,
+      fullName,
+      phone,
+      street,
+      city,
+      state,
+      country,
+      email,
+      password,
+      active,
+      roleId,
+    } = registerSchema.parse(req.body);
 
-    const user = await createUser(
-      { username, email, password, active, roleId }
-    );
+    const user = await createUser({
+      username,
+      fullName,
+      phone,
+      street,
+      city,
+      state,
+      country,
+      email,
+      password,
+      active,
+      roleId,
+    });
 
     res.status(201).json({
       status: "success",
       data: {
         user: {
           username: user.username,
+          fullName: user.fullName,
+          phone: user.phone,
+          street: user.street,
+          city: user.city,
+          state: user.state,
+          country: user.country,
           email: user.email,
           roleId: user.roleId,
           active: user.active,
@@ -111,6 +145,7 @@ export const register = async (
     next(error);
   }
 };
+
 
 
 

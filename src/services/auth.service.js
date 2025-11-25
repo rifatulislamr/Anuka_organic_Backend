@@ -33,6 +33,12 @@ const findUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* (
     return user;
 });
 exports.findUserByEmail = findUserByEmail;
+const findUserByPhone = async (phone) => {
+    return await database_1.db.query.userModel.findFirst({
+        where: (users, { eq }) => eq(users.phone, phone),
+    });
+};
+exports.findUserByPhone = findUserByPhone;
 const getUserDetailsByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(userId);
     const user = yield database_1.db.query.userModel.findFirst({
@@ -52,37 +58,53 @@ const getUserDetailsByUserId = (userId) => __awaiter(void 0, void 0, void 0, fun
     return user;
 });
 exports.getUserDetailsByUserId = getUserDetailsByUserId;
-// Create user function
-const createUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
+
+const createUser = async (userData) => {
     try {
         // Check if username already exists
-        const existingUser = yield (0, exports.findUserByUsername)(userData.username);
+        const existingUser = await (0, exports.findUserByUsername)(userData.username);
         if (existingUser) {
             throw (0, errors_utils_1.BadRequestError)("Username already registered, please try another");
         }
         // Check if email already exists
-        const existingEmail = yield (0, exports.findUserByEmail)(userData.email);
+        const existingEmail = await (0, exports.findUserByEmail)(userData.email);
         if (existingEmail) {
             throw (0, errors_utils_1.BadRequestError)("Email already registered, please try another");
         }
-        // Validate and hash password
+        // Check if phone already exists
+        const existingPhone = await (0, exports.findUserByPhone)(userData.phone);
+        if (existingPhone) {
+            throw (0, errors_utils_1.BadRequestError)("Phone number already registered, please try another");
+        }
+        // Hash password
         (0, password_utils_1.validatePassword)(userData.password);
-        const hashedPassword = yield (0, password_utils_1.hashPassword)(userData.password);
+        const hashedPassword = await (0, password_utils_1.hashPassword)(userData.password);
         // Insert user
-        const [newUserId] = yield database_1.db
+        const [newUserId] = await database_1.db
             .insert(schemas_1.userModel)
             .values({
             username: userData.username,
+            fullName: userData.fullName,
+            phone: userData.phone,
+            street: userData.street,
+            city: userData.city,
+            state: userData.state,
+            country: userData.country,
             email: userData.email,
             password: hashedPassword,
             active: userData.active,
             roleId: userData.roleId,
         })
             .$returningId();
-        // Return safe user object (no password exposed)
         return {
             id: newUserId,
             username: userData.username,
+            fullName: userData.fullName,
+            phone: userData.phone,
+            street: userData.street,
+            city: userData.city,
+            state: userData.state,
+            country: userData.country,
             email: userData.email,
             active: userData.active,
             roleId: userData.roleId,
@@ -91,7 +113,7 @@ const createUser = (userData) => __awaiter(void 0, void 0, void 0, function* () 
     catch (error) {
         throw error;
     }
-});
+};
 exports.createUser = createUser;
 //get user api
 const getUsers = () => __awaiter(void 0, void 0, void 0, function* () {

@@ -39,7 +39,7 @@ exports.userModel = (0, mysql_core_1.mysqlTable)("users", {
         onDelete: "set null",
     }),
     fullName: (0, mysql_core_1.varchar)("full_name", { length: 100 }),
-    phone: (0, mysql_core_1.varchar)("phone", { length: 20 }),
+    phone: (0, mysql_core_1.varchar)("phone", { length: 20 }).notNull().unique(),
     street: (0, mysql_core_1.varchar)("street", { length: 255 }),
     city: (0, mysql_core_1.varchar)("city", { length: 100 }),
     state: (0, mysql_core_1.varchar)("state", { length: 100 }),
